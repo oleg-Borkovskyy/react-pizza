@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { clearCart } from '../redux/actions/cart';
+import { clearCart, removeCartItem } from '../redux/actions/cart';
 import { CartItem } from '../components';
 import cartEmptyImg from '../assets/img/empty-cart.png';
 
@@ -18,6 +18,11 @@ function Cart() {
   const onClearCart = () => {
     if (window.confirm('Ви дійсно хочете очистити кошик?')) {
       dispatch(clearCart());
+    }
+  };
+  const onRemoveItem = (id) => {
+    if (window.confirm('Ви дійсно хочее видалити цю піццу?')) {
+      dispatch(removeCartItem(id));
     }
   };
 
@@ -37,8 +42,8 @@ function Cart() {
                   d="M6.33333 16.3333C7.06971 16.3333 7.66667 15.7364 7.66667 15C7.66667 14.2636 7.06971 13.6667 6.33333 13.6667C5.59695 13.6667 5 14.2636 5 15C5 15.7364 5.59695 16.3333 6.33333 16.3333Z"
                   stroke="white"
                   strokeWidth="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M14.3333 16.3333C15.0697 16.3333 15.6667 15.7364 15.6667 15C15.6667 14.2636 15.0697 13.6667 14.3333 13.6667C13.597 13.6667 13 14.2636 13 15C13 15.7364 13.597 16.3333 14.3333 16.3333Z"
@@ -100,11 +105,13 @@ function Cart() {
           <div className="content__items">
             {addedPizzas.map((obj) => (
               <CartItem
+                id={obj.id}
                 name={obj.name}
                 type={obj.type}
                 size={obj.size}
                 totalPrice={items[obj.id].totalPrice}
                 totalCount={items[obj.id].items.length}
+                onRemove={onRemoveItem}
               />
             ))}
           </div>

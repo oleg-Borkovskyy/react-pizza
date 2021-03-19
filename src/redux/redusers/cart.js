@@ -31,6 +31,18 @@ const cart = (state = initialState, action) => {
         totalPrice,
       };
     }
+
+    case 'REMOVE_CART_ITEM': {
+      const newItems = {
+        ...state.items,
+      };
+      delete newItems[action.payload];
+      return {
+        ...state,
+        items: newItems,
+      };
+    }
+
     case 'CLEAR_CART': {
       return {
         totalPrice: 0,
@@ -38,6 +50,7 @@ const cart = (state = initialState, action) => {
         items: {},
       };
     }
+
     default:
       return state;
   }
