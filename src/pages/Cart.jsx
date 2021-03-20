@@ -2,8 +2,8 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { clearCart, removeCartItem } from '../redux/actions/cart';
-import { CartItem } from '../components';
+import { clearCart, removeCartItem, plusCartItem, minusCartItem } from '../redux/actions/cart';
+import { CartItem, Button } from '../components';
 import cartEmptyImg from '../assets/img/empty-cart.png';
 
 function Cart() {
@@ -20,10 +20,23 @@ function Cart() {
       dispatch(clearCart());
     }
   };
+
   const onRemoveItem = (id) => {
     if (window.confirm('Ви дійсно хочее видалити цю піццу?')) {
       dispatch(removeCartItem(id));
     }
+  };
+
+  const onPlusItem = (id) => {
+    dispatch(plusCartItem(id));
+  };
+
+  const onMinusItem = (id) => {
+    dispatch(minusCartItem(id));
+  };
+
+  const onClickOrder = () => {
+    console.log('ВАШЕ ЗАМОВЛЕННЯ', items);
   };
 
   return (
@@ -105,6 +118,7 @@ function Cart() {
           <div className="content__items">
             {addedPizzas.map((obj) => (
               <CartItem
+                key={obj.id}
                 id={obj.id}
                 name={obj.name}
                 type={obj.type}
@@ -112,6 +126,8 @@ function Cart() {
                 totalPrice={items[obj.id].totalPrice}
                 totalCount={items[obj.id].items.length}
                 onRemove={onRemoveItem}
+                onMinus={onMinusItem}
+                onPlus={onPlusItem}
               />
             ))}
           </div>
@@ -125,7 +141,7 @@ function Cart() {
               </span>
             </div>
             <div className="cart__bottom-buttons">
-              <Link to="/" className="button button--outline button--add go-back-btn">
+              <div className="button button--outline button--add go-back-btn">
                 <svg
                   width="8"
                   height="14"
@@ -140,19 +156,20 @@ function Cart() {
                     strokeLinejoin="round"
                   />
                 </svg>
-
-                <span>Вернуться назад</span>
-              </Link>
-              <div className="button pay-btn">
-                <span>Оплатить сейчас</span>
+                <Link to="/">
+                  <span>Вернуться назад</span>
+                </Link>
               </div>
+              <Button onClick={onClickOrder} className="pay-btn">
+                <span>Оплатить сейчас</span>
+              </Button>
             </div>
           </div>
         </div>
       ) : (
         <div className="cart cart--empty">
           <h2>
-            Корзина пустая <icon>😕</icon>
+            Корзина пустая <i>😕</i>
           </h2>
           <p>
             Вероятней всего, вы не заказывали ещё пиццу.
